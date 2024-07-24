@@ -28,7 +28,7 @@ export const Register = () => {
       .then((res) => res.json())
       .then((authInfo) => {
         if (authInfo && authInfo.token) {
-          localStorage.setItem("rock_token", JSON.stringify(authInfo.token));
+          localStorage.setItem("recipe_token", JSON.stringify(authInfo.token));
           navigate("/");
         } else {
           existDialog.current.showModal();
