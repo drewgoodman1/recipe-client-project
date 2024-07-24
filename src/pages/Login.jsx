@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import "./Login.css";
 
 export const Login = () => {
   const [username, setUsername] = useState("steve"); // Assuming username is "steve"
@@ -21,7 +22,7 @@ export const Login = () => {
       .then((authInfo) => {
         if (authInfo.token) {
           // Checking for token instead of valid
-          localStorage.setItem("rock_token", JSON.stringify(authInfo.token));
+          localStorage.setItem("recipe_token", JSON.stringify(authInfo.token));
           navigate("/");
         } else {
           existDialog.current.showModal();
