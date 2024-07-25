@@ -5,6 +5,7 @@ import Home from "../pages/Home";
 import { Register } from "../pages/Register.jsx";
 import { Login } from "../pages/Login.jsx";
 import { RecipeList } from "./RecipeList.jsx";
+import { RecipeForm } from "./RecipeForm.jsx";
 
 export const ApplicationViews = () => {
   const [recipesState, setRecipesState] = useState([
@@ -23,8 +24,6 @@ export const ApplicationViews = () => {
   const fetchRecipesFromAPI = async () => {
     let url = "http://localhost:8000/recipes";
     let token = localStorage.getItem("recipe_token");
-    console.log(JSON.parse(token))
-    console.log(token);
 
     const response = await fetch(url, {
       headers: {
@@ -51,6 +50,14 @@ export const ApplicationViews = () => {
                 showAll={true}
               />
             }
+          />
+          <Route
+            path="/create-recipe"
+            element={<RecipeForm fetchRecipes={fetchRecipesFromAPI} />}
+          />
+          <Route
+            path="/edit-recipe/:id"
+            element={<RecipeForm fetchRecipes={fetchRecipesFromAPI} />}
           />
         </Route>
       </Routes>
