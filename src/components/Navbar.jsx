@@ -16,7 +16,7 @@ export const NavBar = () => {
       <li className="flex-basis-1/5 list-none">
         <NavLink
           className="text-left underline text-green-600 hover:text-purple-700"
-          to={"/create"}
+          to={"/create-recipe"}
         >
           Create A Recipe
         </NavLink>

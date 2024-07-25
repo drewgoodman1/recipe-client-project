@@ -1,7 +1,28 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const RecipeList = ({ recipes, fetchRecipes }) => {
-  useEffect(() => {});
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchRecipes();
+  }, []);
+
+  const handleDelete = async (recipeId) => {
+    const token = localStorage.getItem("recipe_token");
+    const response = await fetch(`http://localhost:8000/recipes/${recipeId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Token ${JSON.parse(token)}`,
+      },
+    });
+
+    if (response.ok) {
+      fetchRecipes(); // Refresh the list after delete
+    } else {
+      console.error("Failed to delete recipe:", response.statusText);
+    }
+  };
 
   const displayRecipes = () => {
     if (recipes && recipes.length) {
@@ -17,6 +38,22 @@ export const RecipeList = ({ recipes, fetchRecipes }) => {
               <li key={ingredient.id}>{ingredient.name}</li>
             ))}
           </ul>
+          {recipe.is_owner && (
+            <div className="flex space-x-2 mt-3">
+              <button
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                onClick={() => navigate(`/edit-recipe/${recipe.id}`)}
+              >
+                Edit
+              </button>
+              <button
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+                onClick={() => handleDelete(recipe.id)}
+              >
+                Delete
+              </button>
+            </div>
+          )}
         </div>
       ));
     }
