@@ -7,11 +7,13 @@ export const RecipeForm = ({ fetchRecipes }) => {
   const initialRecipeState = {
     description: "",
     ingredients: [],
+    images: [],
   };
 
   const [ingredients, setIngredients] = useState([]);
   const [newRecipe, setNewRecipe] = useState(initialRecipeState);
   const [loading, setLoading] = useState(true); // For managing loading state
+  const [imageBase64, setImageBase64] = useState(""); // State for storing image as Base64 string
 
   useEffect(() => {
     fetchIngredients();
@@ -45,9 +47,9 @@ export const RecipeForm = ({ fetchRecipes }) => {
             ingredients: recipeData.ingredients.map(
               (ingredient) => ingredient.id
             ),
+            images: recipeData.images || [],
           });
         } else if (response.status === 403) {
-          // Handle forbidden access
           alert("You do not have permission to edit this recipe.");
           navigate("/"); // Redirect to home
         } else if (response.status === 404) {
@@ -64,6 +66,19 @@ export const RecipeForm = ({ fetchRecipes }) => {
     }
   };
 
+  const getBase64 = (file, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => callback(reader.result));
+    reader.readAsDataURL(file);
+  };
+
+  const createImageString = (event) => {
+    getBase64(event.target.files[0], (base64ImageString) => {
+      console.log("Base64 of file is", base64ImageString);
+      setImageBase64(base64ImageString);
+    });
+  };
+
   const saveRecipe = async (evt) => {
     evt.preventDefault();
     const token = localStorage.getItem("recipe_token");
@@ -72,13 +87,18 @@ export const RecipeForm = ({ fetchRecipes }) => {
       : "http://localhost:8000/recipes";
     const method = id ? "PUT" : "POST";
 
+    const recipeData = {
+      ...newRecipe,
+      images: imageBase64 ? [imageBase64] : newRecipe.images,
+    };
+
     await fetch(url, {
       method,
       headers: {
         Authorization: `Token ${JSON.parse(token)}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newRecipe),
+      body: JSON.stringify(recipeData),
     });
 
     await fetchRecipes(); // Refresh the recipe list
@@ -129,6 +149,15 @@ export const RecipeForm = ({ fetchRecipes }) => {
                 </label>
               ))}
             </div>
+          </fieldset>
+          <fieldset className="mt-4">
+            <label htmlFor="image">Upload Image:</label>
+            <input
+              id="image"
+              type="file"
+              onChange={createImageString}
+              className="form-control"
+            />
           </fieldset>
           <fieldset>
             <button
