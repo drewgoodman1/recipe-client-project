@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { RecipeCard } from "./RecipeCard"; // Ensure RecipeCard is correctly defined and imported
+import { RecipeCard } from "./RecipeCard";
 import { FaPlus } from "react-icons/fa";
+import { useNavigate } from "react-router-dom"; // Assuming you are using React Router
 
 export const RandomRecipes = () => {
   const [recipes, setRecipes] = useState([
@@ -9,11 +10,12 @@ export const RandomRecipes = () => {
       description: "Sample",
       is_owner: false,
       ingredients: [{ id: 3, name: "Test" }],
-      pictures: [], // Change from 'images' to 'pictures'
+      pictures: [],
     },
   ]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // For navigation
 
   useEffect(() => {
     fetchRecipesFromAPI();
@@ -21,12 +23,11 @@ export const RandomRecipes = () => {
 
   const fetchRecipesFromAPI = async () => {
     const API_BASE_URL = "https://api.spoonacular.com/recipes/random";
-    const API_KEY = "fed8334cd0484e7aad2272f66efeb2e8"; // Replace with your actual Spoonacular API key
+    const API_KEY = "fed8334cd0484e7aad2272f66efeb2e8";
     const LIMIT_LICENSE = true;
     const TAGS = "dinner";
     const NUMBER = 1;
 
-    // Construct the URL with query parameters
     const url = `${API_BASE_URL}?apiKey=${API_KEY}&limitLicense=${LIMIT_LICENSE}&tags=${TAGS}&number=${NUMBER}`;
 
     try {
@@ -40,12 +41,12 @@ export const RandomRecipes = () => {
       const formattedRecipes = data.recipes.map((recipe) => ({
         id: recipe.id,
         description: recipe.title,
-        is_owner: false, // Assuming this is a placeholder or fixed value
+        is_owner: false,
         ingredients: recipe.extendedIngredients.map((ingredient, index) => ({
           id: index,
           name: ingredient.name,
         })),
-        pictures: recipe.image ? [{ id: recipe.id, image: recipe.image }] : [], // Transform images to match the 'pictures' format
+        pictures: recipe.image ? [{ id: recipe.id, image: recipe.image }] : [],
       }));
 
       setRecipes(formattedRecipes);
@@ -53,6 +54,38 @@ export const RandomRecipes = () => {
       setError("Failed to fetch recipes");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const saveRecipe = async (recipe) => {
+    try {
+      const token = localStorage.getItem("recipe_token");
+      const url = "http://localhost:8000/recipes";
+
+      // Extracting necessary fields and formatting them correctly
+      const recipeData = {
+        description: recipe.description,
+        ingredients: recipe.ingredients.map((ingredient) => ({
+          id: ingredient.id, // Ensure this matches your backend's expected format
+          name: ingredient.name,
+        })),
+        images: recipe.pictures.map((pic) => pic.image), // Assuming the backend expects just the image URLs
+        is_owner: false, // Adjust according to your logic
+      };
+
+      await fetch(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Token ${JSON.parse(token)}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(recipeData),
+      });
+
+      // Refresh the recipes or navigate as needed
+      navigate("/recipes");
+    } catch (error) {
+      console.error("Error saving recipe:", error);
     }
   };
 
