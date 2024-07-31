@@ -2,9 +2,32 @@
     display: flex;
     flex-wrap: nowrap;
     justify-content: left;
+    align-items: center;
+    height: 60px; /* Adjust the height as needed */
+    padding: 0 20px;
+    background-image: url('/recipe_nav.jpg'); /* Path relative to the public folder */
+    background-size: contain; /* Make sure the whole image is visible */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent repeating the image */
+    color: white; /* Ensure text is visible on the background */
 }
 
 .navbar__item {
     flex-basis: 20%;
     list-style-type: none;
+    color: inherit; /* Inherit color from the navbar */
+    text-align: center; /* Center text within each item */
+    margin: 0 10px; /* Optional: Add spacing between items */
+}
+
+/* Additional styles for links or items within the navbar, if needed */
+.navbar__item a {
+    text-decoration: none;
+    color: inherit; /* Inherit text color */
+    font-weight: bold; /* Optional: Bold text */
+}
+
+/* Hover effect for navbar items */
+.navbar__item a:hover {
+    text-decoration: underline; /* Underline on hover */
 }

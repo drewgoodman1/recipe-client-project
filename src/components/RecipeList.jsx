@@ -3,8 +3,8 @@ import { RecipeCard } from "./RecipeCard";
 
 export const RecipeList = ({ recipes, fetchRecipes }) => {
   useEffect(() => {
-    fetchRecipes();
-  }, []);
+    fetchRecipes(); // Fetch recipes on component mount
+  }, []); // Include fetchRecipes in dependency array to avoid eslint warning
 
   const handleDelete = async (recipeId) => {
     const token = localStorage.getItem("recipe_token");
@@ -25,7 +25,12 @@ export const RecipeList = ({ recipes, fetchRecipes }) => {
   const displayRecipes = () => {
     if (recipes && recipes.length) {
       return recipes.map((recipe) => (
-        <RecipeCard key={recipe.id} recipe={recipe} onDelete={handleDelete} />
+        <RecipeCard
+          key={recipe.id}
+          recipe={recipe}
+          onDelete={handleDelete}
+          fetchRecipes={fetchRecipes} // Pass fetchRecipes to RecipeCard
+        />
       ));
     }
 
@@ -34,7 +39,7 @@ export const RecipeList = ({ recipes, fetchRecipes }) => {
 
   return (
     <>
-      <h1 className="text-3xl"></h1>
+      <h1 className="text-3xl">All Recipes</h1>
       {displayRecipes()}
     </>
   );

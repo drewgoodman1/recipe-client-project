@@ -6,6 +6,8 @@ import { Register } from "../pages/Register.jsx";
 import { Login } from "../pages/Login.jsx";
 import { RecipeList } from "./RecipeList.jsx";
 import { RecipeForm } from "./RecipeForm.jsx";
+import { RandomRecipes } from "./RandomRecipes.jsx";
+import { MyRecipes } from "./MyRecipes.jsx";
 
 export const ApplicationViews = () => {
   const [recipesState, setRecipesState] = useState([
@@ -52,12 +54,26 @@ export const ApplicationViews = () => {
             }
           />
           <Route
+            path="/myrecipes"
+            element={
+              <MyRecipes
+                recipes={recipesState}
+                fetchRecipes={fetchRecipesFromAPI}
+                showAll={true}
+              />
+            }
+          />
+          <Route
             path="/create-recipe"
             element={<RecipeForm fetchRecipes={fetchRecipesFromAPI} />}
           />
           <Route
             path="/edit-recipe/:id"
             element={<RecipeForm fetchRecipes={fetchRecipesFromAPI} />}
+          />
+          <Route
+            path="/random"
+            element={<RandomRecipes fetchRecipes={fetchRecipesFromAPI} />}
           />
         </Route>
       </Routes>
