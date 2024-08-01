@@ -8,6 +8,7 @@ export const RecipeForm = ({ fetchRecipes }) => {
   const navigate = useNavigate();
   const initialRecipeState = {
     description: "",
+    summary: "",
     ingredients: [],
     images: [],
   };
@@ -51,6 +52,7 @@ export const RecipeForm = ({ fetchRecipes }) => {
           const recipeData = await response.json();
           setNewRecipe({
             description: recipeData.description,
+            summary: recipeData.summary,
             ingredients: recipeData.ingredients.map((ingredient) => ({
               value: ingredient.id,
               label: ingredient.name,
@@ -137,6 +139,19 @@ export const RecipeForm = ({ fetchRecipes }) => {
               className="form-control"
               required
             />
+            <fieldset className="mt-4">
+              <label htmlFor="summary">Summary:</label>
+              <textarea
+                id="summary"
+                onChange={(e) => {
+                  setNewRecipe({ ...newRecipe, summary: e.target.value });
+                }}
+                value={newRecipe.summary}
+                className="form-control"
+                rows="3"
+                required
+              />
+            </fieldset>
           </fieldset>
           <fieldset className="mt-4">
             <label>Ingredients:</label>

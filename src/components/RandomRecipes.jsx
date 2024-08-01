@@ -8,6 +8,7 @@ export const RandomRecipes = () => {
     {
       id: 1,
       description: "Sample",
+      summary: "Test",
       is_owner: false,
       ingredients: [{ id: 3, name: "Test" }],
       pictures: [],
@@ -42,6 +43,7 @@ export const RandomRecipes = () => {
       const formattedRecipes = data.recipes.map((recipe) => ({
         id: recipe.id,
         description: recipe.title,
+        summary: recipe.summary.replace(/<[^>]+>/g, "").split(". ")[0] + ".",
         is_owner: false,
         ingredients: recipe.extendedIngredients.map((ingredient, index) => ({
           id: index,
@@ -66,6 +68,7 @@ export const RandomRecipes = () => {
       // Extracting necessary fields and formatting them correctly
       const recipeData = {
         description: recipe.description,
+        summary: recipe.summary, // Include summary in the saved recipe data
         ingredients: recipe.ingredients.map((ingredient) => ({
           id: ingredient.id, // Ensure this matches your backend's expected format
           name: ingredient.name,
