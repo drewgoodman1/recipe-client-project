@@ -39,7 +39,7 @@ export const RecipeList = ({ recipes, fetchRecipes }) => {
 
   return (
     <>
-      <h1 className="text-3xl">All Recipes</h1>
+      <h1 className="text-3xl"></h1>
       {displayRecipes()}
     </>
   );

@@ -38,6 +38,7 @@ export const RandomRecipes = () => {
       }
 
       const data = await response.json();
+      console.log(data);
       const formattedRecipes = data.recipes.map((recipe) => ({
         id: recipe.id,
         description: recipe.title,
@@ -94,7 +95,7 @@ export const RandomRecipes = () => {
 
   return (
     <div>
-      <h2>Random Recipes</h2>
+      <h2></h2>
       <div>
         {recipes.map((recipe) => (
           <div key={recipe.id} className="mb-6">

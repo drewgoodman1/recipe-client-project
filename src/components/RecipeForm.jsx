@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Select from "react-select";
+import { FaFileUpload } from "react-icons/fa";
 
 export const RecipeForm = ({ fetchRecipes }) => {
   const { id } = useParams(); // Get the recipe ID from the URL if it exists
@@ -28,7 +30,12 @@ export const RecipeForm = ({ fetchRecipes }) => {
       },
     });
     const ingredientsData = await response.json();
-    setIngredients(ingredientsData);
+    setIngredients(
+      ingredientsData.map((ingredient) => ({
+        value: ingredient.id,
+        label: ingredient.name,
+      }))
+    );
   };
 
   const fetchRecipe = async () => {
@@ -44,9 +51,10 @@ export const RecipeForm = ({ fetchRecipes }) => {
           const recipeData = await response.json();
           setNewRecipe({
             description: recipeData.description,
-            ingredients: recipeData.ingredients.map(
-              (ingredient) => ingredient.id
-            ),
+            ingredients: recipeData.ingredients.map((ingredient) => ({
+              value: ingredient.id,
+              label: ingredient.name,
+            })),
             images: recipeData.images || [],
           });
         } else if (response.status === 403) {
@@ -89,6 +97,7 @@ export const RecipeForm = ({ fetchRecipes }) => {
 
     const recipeData = {
       ...newRecipe,
+      ingredients: newRecipe.ingredients.map((ingredient) => ingredient.value), // Only send the IDs
       images: imageBase64 ? [imageBase64] : newRecipe.images,
     };
 
@@ -105,13 +114,8 @@ export const RecipeForm = ({ fetchRecipes }) => {
     navigate("/recipes");
   };
 
-  const handleCheckboxChange = (e) => {
-    const ingredientId = parseInt(e.target.value);
-    const updatedIngredients = e.target.checked
-      ? [...newRecipe.ingredients, ingredientId]
-      : newRecipe.ingredients.filter((id) => id !== ingredientId);
-
-    setNewRecipe({ ...newRecipe, ingredients: updatedIngredients });
+  const handleIngredientChange = (selectedOptions) => {
+    setNewRecipe({ ...newRecipe, ingredients: selectedOptions });
   };
 
   if (loading) return <p>Loading...</p>;
@@ -136,19 +140,14 @@ export const RecipeForm = ({ fetchRecipes }) => {
           </fieldset>
           <fieldset className="mt-4">
             <label>Ingredients:</label>
-            <div className="flex flex-col">
-              {ingredients.map((ingredient) => (
-                <label key={`ingredient-${ingredient.id}`} className="mt-2">
-                  <input
-                    type="checkbox"
-                    value={ingredient.id}
-                    onChange={handleCheckboxChange}
-                    checked={newRecipe.ingredients.includes(ingredient.id)}
-                  />
-                  {ingredient.name}
-                </label>
-              ))}
-            </div>
+            <Select
+              isMulti
+              options={ingredients}
+              value={newRecipe.ingredients}
+              onChange={handleIngredientChange}
+              className="basic-multi-select"
+              classNamePrefix="select"
+            />
           </fieldset>
           <fieldset className="mt-4">
             <label htmlFor="image">Upload Image:</label>
