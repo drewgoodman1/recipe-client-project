@@ -64,15 +64,11 @@ export const RecipeCard = ({
           <p className="mt-2 text-gray-500">Owner: {is_owner ? "Yes" : "No"}</p>
           <div className="mt-4">
             <h4 className="text-sm font-bold text-gray-700">Ingredients:</h4>
-            <ul className="list-disc list-inside text-sm text-gray-600">
-              {ingredients.length > 0 ? (
-                ingredients.map((ingredient, index) => (
-                  <li key={index}>{ingredient.name}</li>
-                ))
-              ) : (
-                <li>No ingredients listed</li>
-              )}
-            </ul>
+            <p className="text-sm text-gray-600">
+              {ingredients.length > 0
+                ? ingredients.map((ingredient) => ingredient.name).join(", ")
+                : "No ingredients listed"}
+            </p>
           </div>
           <div className="mt-4 flex space-x-2">
             {is_owner && (
