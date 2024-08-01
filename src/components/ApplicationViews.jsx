@@ -14,6 +14,7 @@ export const ApplicationViews = () => {
     {
       id: 1,
       description: "Sample",
+      summary: "Test",
       is_owner: true,
       ingredients: [{ id: 3, name: "Test" }],
     },

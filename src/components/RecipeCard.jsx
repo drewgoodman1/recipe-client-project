@@ -8,8 +8,15 @@ export const RecipeCard = ({
   fetchMyRecipes,
   fetchRecipes,
 }) => {
-  const { id, description, ingredients, pictures, is_owner, is_favorite } =
-    recipe;
+  const {
+    id,
+    description,
+    summary,
+    ingredients,
+    pictures,
+    is_owner,
+    is_favorite,
+  } = recipe;
   const [liked, setLiked] = useState(is_favorite);
   const navigate = useNavigate();
 
@@ -61,7 +68,12 @@ export const RecipeCard = ({
           <h3 className="block mt-1 text-lg leading-tight font-semibold text-gray-900">
             {description}
           </h3>
-          <p className="mt-2 text-gray-500">Owner: {is_owner ? "Yes" : "No"}</p>
+          <div className="mt-4">
+            <h4 className="text-sm font-bold text-gray-700">Summary:</h4>
+            <p className="text-sm text-gray-600">{summary}</p>{" "}
+            {/* Display summary */}
+          </div>
+
           <div className="mt-4">
             <h4 className="text-sm font-bold text-gray-700">Ingredients:</h4>
             <p className="text-sm text-gray-600">
