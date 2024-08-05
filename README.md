@@ -73,7 +73,7 @@ Create a `.env` file in both the `frontend` and `backend` directories to store y
 
 1. **Start the backend**:
     ```sh
-    cd recipeapi
+    cd recipeapiproject
     python manage.py runserver
     ```
 
