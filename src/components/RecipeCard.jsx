@@ -1,13 +1,51 @@
-import React from "react";
-import { FaEdit, FaTrashAlt } from "react-icons/fa"; // Import the specific icons you need
+import React, { useState } from "react";
+import { FaEdit, FaTrashAlt, FaThumbsUp } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-export const RecipeCard = ({ recipe, onDelete }) => {
-  const { id, description, ingredients, pictures, is_owner } = recipe;
+export const RecipeCard = ({
+  recipe,
+  onDelete,
+  fetchMyRecipes,
+  fetchRecipes,
+}) => {
+  const {
+    id,
+    description,
+    summary,
+    ingredients,
+    pictures,
+    is_owner,
+    is_favorite,
+  } = recipe;
+  const [liked, setLiked] = useState(is_favorite);
   const navigate = useNavigate();
 
   const handleEdit = () => {
     navigate(`/edit-recipe/${id}`);
+  };
+
+  const handleFavorite = async () => {
+    const token = localStorage.getItem("recipe_token");
+    try {
+      const response = await fetch(
+        `http://localhost:8000/recipes/${id}/favorite`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Token ${JSON.parse(token)}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        setLiked(!liked); // Toggle liked state
+        fetchMyRecipes(); // Refresh the list to update the favorite status
+      } else {
+        console.error("Failed to toggle favorite:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+    }
   };
 
   return (
@@ -30,35 +68,48 @@ export const RecipeCard = ({ recipe, onDelete }) => {
           <h3 className="block mt-1 text-lg leading-tight font-semibold text-gray-900">
             {description}
           </h3>
-          <p className="mt-2 text-gray-500">Owner: {is_owner ? "Yes" : "No"}</p>
+          <div className="mt-4">
+            <h4 className="text-sm font-bold text-gray-700">Summary:</h4>
+            <p className="text-sm text-gray-600">{summary}</p>{" "}
+            {/* Display summary */}
+          </div>
+
           <div className="mt-4">
             <h4 className="text-sm font-bold text-gray-700">Ingredients:</h4>
-            <ul className="list-disc list-inside text-sm text-gray-600">
-              {ingredients.length > 0 ? (
-                ingredients.map((ingredient, index) => (
-                  <li key={index}>{ingredient.name}</li>
-                ))
-              ) : (
-                <li>No ingredients listed</li>
-              )}
-            </ul>
+            <p className="text-sm text-gray-600">
+              {ingredients.length > 0
+                ? ingredients.map((ingredient) => ingredient.name).join(", ")
+                : "No ingredients listed"}
+            </p>
           </div>
-          {is_owner && (
-            <div className="mt-4 flex space-x-2">
-              <button
-                className="flex items-center px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 text-sm"
-                onClick={handleEdit}
-              >
-                <FaEdit />
-              </button>
-              <button
-                className="flex items-center px-2 py-1 bg-gray-500 text-white rounded-md hover:bg-gray-600 text-sm"
-                onClick={() => onDelete(id)}
-              >
-                <FaTrashAlt />
-              </button>
-            </div>
-          )}
+          <div className="mt-4 flex space-x-2">
+            {is_owner && (
+              <>
+                <button
+                  className="flex items-center px-2 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 text-sm"
+                  onClick={handleEdit}
+                >
+                  <FaEdit />
+                </button>
+                <button
+                  className="flex items-center px-2 py-1 bg-gray-500 text-white rounded-md hover:bg-gray-600 text-sm"
+                  onClick={() => onDelete(id)}
+                >
+                  <FaTrashAlt />
+                </button>
+              </>
+            )}
+            <button
+              className={`flex items-center px-2 py-1 rounded-md text-sm ${
+                liked
+                  ? "bg-blue-500 text-white hover:bg-blue-600"
+                  : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+              }`}
+              onClick={handleFavorite}
+            >
+              <FaThumbsUp />
+            </button>
+          </div>
         </div>
       </div>
     </div>
