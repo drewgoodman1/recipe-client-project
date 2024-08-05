@@ -43,19 +43,19 @@
     git clone https://github.com/your-username/recipe-client-project.git
     cd recipe-client-project
     git clone https://github.com/your-username/recipeapi.git
-    cd recipeapi
+    cd recipeapiproject
     ```
 
 2. **Frontend Setup**:
     ```sh
     cd recipe-client-project
     npm install
-    npm start
+    npm run dev
     ```
 
 3. **Backend Setup**:
     ```sh
-    cd recipeapi
+    cd recipeapiproject
     pip install -r requirements.txt
     python manage.py migrate
     python manage.py runserver
