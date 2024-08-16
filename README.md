@@ -95,7 +95,7 @@ This project is licensed under the MIT License.
 
 **Andrew Goodman**  
 Email: goodman.drew1@gmail.com  
-LinkedIn: [linkedin.com/in/andrew-goodman-736740101](https://www.linkedin.com/in/andrew-goodman-736740101)  
+LinkedIn:(https://www.linkedin.com/in/drew-goodman-736740101/)
 GitHub: [github.com/drewgoodman1](https://github.com/drewgoodman1)
 
 
